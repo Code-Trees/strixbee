@@ -26,7 +26,7 @@ from albumentations.pytorch.transforms import ToTensorV2
 
 from rf_calc import receptive_field
 
-from utils.data_iter import get_data
+from utils.data_iter import get_data,get_data_stats
 
 def Run_Model(model_class,train_loader,test_loader,epochs , L1 = False):
     
