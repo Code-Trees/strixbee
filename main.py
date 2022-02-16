@@ -84,7 +84,7 @@ def Run_Model(model_class,train_loader,test_loader,epochs , L1 = False):
 
 if __name__ == "__main__":
     batch_size = 64
-    epochs = 10
+    epochs = 5
 
     _=torch.manual_seed(1)
     if torch.cuda.is_available():
