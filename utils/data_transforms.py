@@ -1,11 +1,13 @@
 import torch
+from torch.utils.data.dataset import Dataset
 from torchvision import transforms,datasets
 import albumentations as A
 from albumentations.augmentations.geometric.resize import Resize
 from albumentations.pytorch.transforms import ToTensorV2
+from utils.data_iter import get_data,get_data_stats
+import numpy as np
 
-
-
+mean,std  = get_data_stats(test,train,img_norm_typ ='train',plot = False)
 # Base Normalization
 train_transform =A.Compose([A.Resize(32,32),
                             A.Normalize(mean = mean,std = std,max_pixel_value=255,always_apply = True),

@@ -2,6 +2,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 import torch
+import torch.nn as nn
 
 class GhostBatchNorm(nn.BatchNorm2d):
     """

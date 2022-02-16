@@ -7,6 +7,9 @@ import torch
 import torch.nn.functional as F
 import torch.nn as nn
 
+from model.custom_layer import *
+
+
 class Cifar10Net1(nn.Module):
     def __init__(self,dropout_val = 0,norm_type = 'bn'):
         super(Cifar10Net1,self).__init__()

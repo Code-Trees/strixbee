@@ -27,6 +27,11 @@ from albumentations.pytorch.transforms import ToTensorV2
 from rf_calc import receptive_field
 
 from utils.data_iter import get_data,get_data_stats
+from utils.data_transforms import AlbumDataset
+from utils.optimizer_utils import *
+
+from model.cifar10_model import Cifar10Net1
+
 
 def Run_Model(model_class,train_loader,test_loader,epochs , L1 = False):
     
@@ -76,7 +81,18 @@ if __name__ == "__main__":
     #take input as normal_type ['gbn','bn','gn','ln']
     # To Un Normalize the test data
     mean,std  = get_data_stats(test,train,img_norm_typ ='train',plot = False)
-
+    
+    # Advanced Normalization
+    train_transform =A.Compose([A.Resize(32,32),
+                                A.Normalize(mean = mean,std = std,max_pixel_value=255,always_apply = True),
+                                 A.ShiftScaleRotate(always_apply=False),
+                                 A.CoarseDropout(always_apply = False,max_holes = 1, max_height=16, max_width=16, min_holes = 1, min_height=16, min_width=16, fill_value=mean, mask_fill_value = None),
+                                ToTensorV2(transpose_mask =False),
+                                 ])      
+    test_transform = A.Compose([A.Resize(32,32),
+                                 A.Normalize(mean = mean,std = std,max_pixel_value=255,always_apply = True),
+                               ToTensorV2(transpose_mask =False), ])
+                               
     train_alb = AlbumDataset(train,train_transform)
     test_alb = AlbumDataset(test,test_transform)
 

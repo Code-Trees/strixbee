@@ -13,7 +13,7 @@ def trainning(model,device,train_data,optimizer,epochs,L1 = False,L2= False):
     processed = 0
 
     model.train()
-    pbar = tqdm(train_loader,colour = '\x1b[34m')
+    pbar = tqdm(train_data,colour = '\x1b[34m')
     
     for index_id,(data,target) in enumerate(pbar):
         data,target = data.to(device),target.to(device)
@@ -43,7 +43,7 @@ def testing(model,device,test_data,optimizer,epochs):
     test_loss = 0
     correct = 0
     processed = 0
-    pbar= tqdm(test_loader)
+    pbar= tqdm(test_data)
     with torch.no_grad():
         for id_x,(data,target) in enumerate(pbar):
             data,target = data.to(device),target.to(device)
