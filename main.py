@@ -30,6 +30,8 @@ from utils.data_iter import get_data,get_data_stats
 from utils.data_transforms import AlbumDataset
 from utils.optimizer_utils import *
 from utils.train_test import *
+from utils.clean_gpu import *
+from utils import * 
 
 from model.cifar10_model import Cifar10Net1
 
@@ -81,7 +83,7 @@ def Run_Model(model_class,train_loader,test_loader,epochs , L1 = False):
 
 if __name__ == "__main__":
     batch_size = 64
-    epochs = 80
+    epochs = 10
 
     _=torch.manual_seed(1)
     if torch.cuda.is_available():
