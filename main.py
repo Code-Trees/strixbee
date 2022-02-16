@@ -30,7 +30,7 @@ from utils.data_iter import get_data,get_data_stats
 from utils.data_transforms import AlbumDataset
 from utils.optimizer_utils import *
 from utils.train_test import *
-from utils.clean_gpu import *
+from utils.clean_gpu import clean_gpu
 from utils.plots import * 
 from utils import * 
 
