@@ -54,10 +54,19 @@ def Run_Model(model_class,train_loader,test_loader,epochs , L1 = False):
 
     for EPOCHS in range(0,epochs):
         if L1 == True:
-            train_losses, train_accuracy = trainning(model,device,train_loader,optimizer,EPOCHS,L1 = L1)
+            train_loss, train_acc = trainning(model,device,train_loader,optimizer,EPOCHS,L1 = L1)
+            train_losses.append(train_loss)
+            train_accuracy.append(train_acc)
         else:
-            train_losses, train_accuracy = trainning(model,device,train_loader,optimizer,EPOCHS)
-        test_losses,test_accuracy = testing(model,device,test_loader,optimizer,EPOCHS)
+            train_loss, train_acc = trainning(model,device,train_loader,optimizer,EPOCHS)
+            train_losses.append(train_loss)
+            train_accuracy.append(train_acc)
+
+        test_loss,test_acc = testing(model,device,test_loader,optimizer,EPOCHS)
+
+        test_accuracy.append(test_acc)
+        test_losses.append(test_loss)
+        
         scheduler.step()
         try:
             if (EPOCHS >=3)&(max(test_accuracy[:-1]) < test_accuracy[-1]) & (max(test_accuracy) >= .85):

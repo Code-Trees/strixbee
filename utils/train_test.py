@@ -32,10 +32,10 @@ def trainning(model,device,train_data,optimizer,epochs,L1 = False,L2= False):
 
     acc = correct /processed
     total_loss = total_loss.item()/processed
-    train_losses.append(total_loss)
-    train_accuracy.append(acc)
+    # train_losses.append(total_loss)
+    # train_accuracy.append(acc)
 
-    return train_losses, train_accuracy
+    return total_loss, acc
 
 def testing(model,device,test_data,optimizer,epochs):
     model.eval()
