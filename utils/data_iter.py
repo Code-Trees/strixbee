@@ -39,7 +39,8 @@ def get_data_stats(dataset_train,dataset_test = None,img_norm_typ ='train',plot 
 
     elif img_norm_typ == 'train+test':
         fig = plt.figure(figsize=(10,5))
-        mega_data  =np.append(dataset_train.data, dataset_test.data, 0)
+        import numpy as np
+        mega_data  = np.append(dataset_train.data, dataset_test.data, 0)
         for i in range(0,dataset_train.data.shape[len(dataset_train.data.shape)-1]):
             scale = mega_data[:,:,:,i]/mega_data[:,:,:,i].max()
             MEAN.append(scale.mean())
