@@ -31,6 +31,7 @@ from utils.data_transforms import AlbumDataset
 from utils.optimizer_utils import *
 from utils.train_test import *
 from utils.clean_gpu import *
+from utils.plots import * 
 from utils import * 
 
 from model.cifar10_model import Cifar10Net1
