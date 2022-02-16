@@ -2,6 +2,7 @@
 import warnings
 warnings.filterwarnings('ignore')
 
+import pip
 import torch
 import torch.nn.functional as F
 import torch.nn as nn
@@ -82,6 +83,15 @@ def Run_Model(model_class,train_loader,test_loader,epochs , L1 = False):
         print ("LR :{}\n".format(scheduler.get_lr()[0]))
     return model,train_losses, train_accuracy,test_losses,test_accuracy
 
+
+
+def import_or_install(package):
+    try:
+        __import__(package)
+    except ImportError:
+        pip.main(['install', package]) 
+        
+        
 if __name__ == "__main__":
     batch_size = 64
     epochs = 5
