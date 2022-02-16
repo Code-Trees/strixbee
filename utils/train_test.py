@@ -59,12 +59,12 @@ def testing(model,device,test_data,optimizer,epochs):
         
     acc = correct / processed
     test_loss /= processed
-    test_accuracy.append(acc)
-    test_losses.append(test_loss)
+    # test_accuracy.append(acc)
+    # test_losses.append(test_loss)
    
     
     # print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.6f}%)\n'.format(
     #     test_loss, correct, processed, 100. * correct / processed))
     
-    return test_losses,test_accuracy
+    return test_loss,acc
     
