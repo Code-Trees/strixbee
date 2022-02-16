@@ -7,6 +7,7 @@ from albumentations.pytorch.transforms import ToTensorV2
 from utils.data_iter import get_data,get_data_stats
 import numpy as np
 
+train,test = get_data()
 mean,std  = get_data_stats(test,train,img_norm_typ ='train',plot = False)
 # Base Normalization
 train_transform =A.Compose([A.Resize(32,32),
