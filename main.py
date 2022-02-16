@@ -29,6 +29,7 @@ from rf_calc import receptive_field
 from utils.data_iter import get_data,get_data_stats
 from utils.data_transforms import AlbumDataset
 from utils.optimizer_utils import *
+from utils.train_test import *
 
 from model.cifar10_model import Cifar10Net1
 
@@ -104,7 +105,7 @@ if __name__ == "__main__":
     for norm_type in try_type:
 
         model_class = Cifar10Net1(dropout_val=0.00,norm_type=norm_type)
-        model,train_losses, train_accuracy,test_losses,test_accuracy = Run_Model(model_class,train_alb,test_alb,epochs =epochs)
+        model,train_losses, train_accuracy,test_losses,test_accuracy = Run_Model(model_class,train_loader,test_loader,epochs =epochs)
 
         plot_acc_loss(norm_type ,train_accuracy,train_losses,test_accuracy,test_losses)
         clean_gpu()
