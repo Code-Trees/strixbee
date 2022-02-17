@@ -4,7 +4,7 @@ from torchvision import transforms,datasets
 import albumentations as A
 from albumentations.augmentations.geometric.resize import Resize
 from albumentations.pytorch.transforms import ToTensorV2
-from ustrixbee.tils.data_iter import get_data,get_data_stats
+from strixbee.utils.data_iter import get_data,get_data_stats
 import numpy as np
 
 train,test = get_data()
