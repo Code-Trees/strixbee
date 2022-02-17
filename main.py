@@ -71,7 +71,7 @@ def Run_Model(model_class,train_loader,test_loader,epochs , L1 = False):
         test_accuracy.append(test_acc)
         test_losses.append(test_loss)
         
-        scheduler.step()
+        scheduler.step(train_loss)
         try:
             if (EPOCHS >=3)&(max(test_accuracy[:-1]) < test_accuracy[-1]) & (max(test_accuracy) >= .85):
                 checkpoint = {'epoch': EPOCHS + 1,'valid_loss_min': test_losses[-1],'state_dict': model.state_dict(),'optimizer': optimizer.state_dict(),} # Export to TorchScript
@@ -80,7 +80,7 @@ def Run_Model(model_class,train_loader,test_loader,epochs , L1 = False):
         except:
             print('Model Saving Failed !!')
 
-        print ("LR :{}\n".format(scheduler.get_lr()[0]))
+        # print ("LR :{}\n".format(scheduler.get_lr()[0]))
     return model,train_losses, train_accuracy,test_losses,test_accuracy
 
 
