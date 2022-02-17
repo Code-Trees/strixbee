@@ -27,13 +27,13 @@ from albumentations.pytorch.transforms import ToTensorV2
 
 from rf_calc import receptive_field
 
-from utils.data_iter import get_data,get_data_stats
-from utils.data_transforms import AlbumDataset
-from utils.optimizer_utils import *
-from utils.train_test import *
-from utils.gpu import clean_gpu
-from utils.plots import * 
-from utils import * 
+from strixbee.utils.data_iter import get_data,get_data_stats
+from strixbee.utils.data_transforms import AlbumDataset
+from strixbee.utils.optimizer_utils import *
+from strixbee.utils.train_test import *
+from strixbee.utils.gpu import clean_gpu
+from strixbee.utils.plots import * 
+from strixbee.utils import * 
 
 from model.cifar10_model import Cifar10Net1
 
