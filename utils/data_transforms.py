@@ -7,29 +7,30 @@ from albumentations.pytorch.transforms import ToTensorV2
 from strixbee.utils.data_iter import get_data,get_data_stats
 import numpy as np
 
-train,test = get_data()
-mean,std  = get_data_stats(test,train,img_norm_typ ='train',plot = False)
-# Base Normalization
-train_transform =A.Compose([A.Resize(32,32),
-                            A.Normalize(mean = mean,std = std,max_pixel_value=255,always_apply = True),
-                            ToTensorV2(transpose_mask =False),
-                            ])      
-test_transform = A.Compose([A.Resize(32,32),
-                            A.Normalize(mean = mean,std = std,max_pixel_value=255,always_apply = True),
-                            ToTensorV2(transpose_mask =False,),
-                            ])
+# train,test = get_data()
+
+# mean,std  = get_data_stats(test,train,img_norm_typ ='train',plot = False)
+# # Base Normalization
+# train_transform =A.Compose([A.Resize(32,32),
+#                             A.Normalize(mean = mean,std = std,max_pixel_value=255,always_apply = True),
+#                             ToTensorV2(transpose_mask =False),
+#                             ])      
+# test_transform = A.Compose([A.Resize(32,32),
+#                             A.Normalize(mean = mean,std = std,max_pixel_value=255,always_apply = True),
+#                             ToTensorV2(transpose_mask =False,),
+#                             ])
 
 
-# Advanced Normalization
-train_transform =A.Compose([A.Resize(32,32),
-                            A.Normalize(mean = mean,std = std,max_pixel_value=255,always_apply = True),
-                             A.ShiftScaleRotate(always_apply=False),
-                             A.CoarseDropout(always_apply = False,max_holes = 1, max_height=16, max_width=16, min_holes = 1, min_height=16, min_width=16, fill_value=mean, mask_fill_value = None),
-                            ToTensorV2(transpose_mask =False),
-                             ])      
-test_transform = A.Compose([A.Resize(32,32),
-                             A.Normalize(mean = mean,std = std,max_pixel_value=255,always_apply = True),
-                           ToTensorV2(transpose_mask =False), ])
+# # Advanced Normalization
+# train_transform =A.Compose([A.Resize(32,32),
+#                             A.Normalize(mean = mean,std = std,max_pixel_value=255,always_apply = True),
+#                              A.ShiftScaleRotate(always_apply=False),
+#                              A.CoarseDropout(always_apply = False,max_holes = 1, max_height=16, max_width=16, min_holes = 1, min_height=16, min_width=16, fill_value=mean, mask_fill_value = None),
+#                             ToTensorV2(transpose_mask =False),
+#                              ])      
+# test_transform = A.Compose([A.Resize(32,32),
+#                              A.Normalize(mean = mean,std = std,max_pixel_value=255,always_apply = True),
+#                            ToTensorV2(transpose_mask =False), ])
                            
                            
 class AlbumDataset(Dataset):
