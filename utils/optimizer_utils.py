@@ -14,14 +14,15 @@ def get_optimizer(model_obj,train_loader,loss_type=None,scheduler = False):
     if loss_type  == 'L2' :
         optimizer = SGD( params = parameters,lr = 0.01,momentum = 0.9,weight_decay= 0.001)
     else:
+        print('Trying to get Best Learning rate')
         optimizer = SGD( params = parameters,lr = 1e-7,momentum = 0.9)
         criterion = nn.NLLLoss()
         lr_finder = LRFinder(model_obj,optimizer,criterion,device = 'cuda' if torch.cuda.is_available() else 'cpu')
         lr_finder.range_test(train_loader,end_lr = 10,num_iter = 100)
         grapg,lr_rate = lr_finder.plot()
         lr_finder.reset()
-
-        optimizer = SGD( params = parameters,lr =lr_rate,momentum = 0.9)
+        print(f"Updating Learning rate as {lr_rate}")
+        optimizer = SGD( params = model_obj.parameters(),lr =lr_rate,momentum = 0.9)
 
     if scheduler == True:
         scheduler = ReduceLROnPlateau(optimizer,mode = 'min')
