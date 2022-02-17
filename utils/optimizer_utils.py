@@ -16,7 +16,7 @@ def get_optimizer(model_obj,loss_type=None,scheduler = False):
         scheduler = StepLR(optimizer,step_size = 20,gamma = 0.1)
         return optimizer,scheduler
     else:
-        return optimizer,_
+        return optimizer
 
 
 #L1 Loss
