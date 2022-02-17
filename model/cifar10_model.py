@@ -1,5 +1,5 @@
-import warnings
-warnings.filterwarnings('ignore')
+
+
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -7,7 +7,7 @@ import torch
 import torch.nn.functional as F
 import torch.nn as nn
 
-from model.custom_layer import *
+from strixbee.model.custom_layer import Depthwise_sep_conv,ConvBlock
 
 
 class Cifar10Net1(nn.Module):
