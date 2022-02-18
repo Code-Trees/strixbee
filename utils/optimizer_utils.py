@@ -34,7 +34,7 @@ def run_lrfinder(model_obj,train_loader,test_loader,loss_type=None,loops = 2):
         print(f"Learning rate as LRFinder :{lr_rate}")
         lrs.append(lr_rate)
 
-        optimizer = SGD( params = model_obj.parameters(),lr =lr_rate,momentum = 0.9,weight_decay= 0.001 if loss_type =='L2' else 0)
+        optimizer = SGD( params = model_obj.parameters(),lr =lr_rate,momentum = 0.9,weight_decay= 0.0941 if loss_type =='L2' else 0)
         print(optimizer)
     return lrs
 
