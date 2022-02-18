@@ -19,7 +19,7 @@ def run_lrfinder(model_obj,train_loader,test_loader,loss_type=None,loops = 2):
         optimizer = SGD( params = model_obj.parameters(),lr = 1e-7,momentum = 0.9,weight_decay= 0.001 if loss_type =='L2' else 0)
         criterion = nn.CrossEntropyLoss()
         lr_finder = LRFinder(model_obj,optimizer,criterion,device = 'cuda' if torch.cuda.is_available() else 'cpu')
-        lr_finder.range_test(train_loader ,val_loader = test_loadet,end_lr = 100,num_iter = 100,step_mode = 'exp')
+        lr_finder.range_test(train_loader ,val_loader = test_loader,end_lr = 100,num_iter = 100,step_mode = 'exp')
         try:
             grapg,lr_rate = lr_finder.plot()
         except:
