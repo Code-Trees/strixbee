@@ -39,15 +39,22 @@ def run_lrfinder(model_obj,train_loader,test_loader,loss_type=None,loops = 2):
     return lrs
 
 
-def get_optimizer(model_obj,loss_type=None,scheduler = False,lr = 0.01):
+def get_optimizer(model_obj,loss_type=None,scheduler = False,scheduler_type = 'steplr',lr = 0.01):
     loss_type= str(loss_type).upper()
     parameters = model_obj.parameters()
 
+
     optimizer = SGD( params = model_obj.parameters(),lr = lr,momentum = 0.9,weight_decay= 0.001 if loss_type =='L2' else 0 )
     
-    if scheduler == True:
+    if (scheduler == True) & (scheduler_type == 'steplr'):
+        scheduler = StepLR(optimizer,step_size = 20,gamma=0.1)
+        return optimizer,scheduler
+
+    elif (scheduler == True) & (scheduler_type == 'reducelronplateau'):
+        
         scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.01, patience=7, verbose=True, threshold=0.0001,threshold_mode='rel', cooldown=0, min_lr=1e-7, eps=1e-08)
         return optimizer,scheduler
+
     else:
         return optimizer
 
