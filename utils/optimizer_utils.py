@@ -20,7 +20,7 @@ def run_lrfinder(model_obj,train_loader,test_loader,loss_type=None,loops = 2):
         optimizer = SGD( params = model_obj.parameters(),lr = 1e-7,momentum = 0.9,weight_decay= 0.001 if loss_type =='L2' else 0)
         criterion = nn.CrossEntropyLoss()
         lr_finder = LRFinder(model_obj,optimizer,criterion,device = 'cuda' if torch.cuda.is_available() else 'cpu')
-        lr_finder.range_test(train_loader ,val_loader = test_loader,end_lr = 100,num_iter = 100,step_mode = 'exp')
+        lr_finder.range_test(train_loader ,val_loader = test_loader,end_lr = 10,num_iter = 70,step_mode = 'exp')
         try:
             grapg,lr_rate = lr_finder.plot()
         except:
@@ -43,7 +43,7 @@ def get_optimizer(model_obj,loss_type=None,scheduler = False,lr = 0.01):
     optimizer = SGD( params = model_obj.parameters(),lr = lr,momentum = 0.9,weight_decay= 0.001 if loss_type =='L2' else 0 )
     
     if scheduler == True:
-        scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.2, patience=3, verbose=False, threshold=0.0001, threshold_mode='rel', cooldown=0, min_lr=0, eps=1e-08)
+        scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.01, patience=, verbose=False, threshold=0.0001, threshold_mode='rel', cooldown=0, min_lr=1e-7, eps=1e-08)
         return optimizer,scheduler
     else:
         return optimizer
