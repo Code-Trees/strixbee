@@ -3,7 +3,8 @@ warnings.filterwarnings('ignore')
 
 import torch
 import torch.nn as nn
-import torch.functional as F
+import torch.nn.functional as F
+
 class GhostBatchNorm(nn.BatchNorm2d):
     """
     From : https://github.com/davidcpage/cifar10-fast/blob/master/bag_of_tricks.ipynb
