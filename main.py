@@ -7,7 +7,7 @@ import torch
 import torch.nn.functional as F
 import torch.nn as nn
 
-from torch.optim import SGD
+from torch.optim import SGD`
 from torch.utils.data import DataLoader
 from torch.utils.data.dataset import Dataset
 from torch.optim.lr_scheduler import StepLR
