@@ -36,7 +36,7 @@ class GhostBatchNorm(nn.BatchNorm2d):
     def forward(self, input):
         N, C, H, W = input.shape
         if self.training or not self.track_running_stats:
-            return F.batch_norm(
+            return f.batch_norm(
                 input.view(-1, C*self.num_splits, H, W), self.running_mean, self.running_var, 
                 self.weight.repeat(self.num_splits), self.bias.repeat(self.num_splits),
                 True, self.momentum, self.eps).view(N, C, H, W) 
