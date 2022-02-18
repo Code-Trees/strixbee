@@ -36,7 +36,7 @@ def run_lrfinder(model_obj,train_loader,test_loader,loss_type=None,loops = 2):
     return lrs
 
 
-def get_optimizer(model_obj,lr = 0.01,loss_type=None,scheduler = False,lr = 0.01):
+def get_optimizer(model_obj,loss_type=None,scheduler = False,lr = 0.01):
     loss_type= str(loss_type).upper()
     parameters = model_obj.parameters()
 
