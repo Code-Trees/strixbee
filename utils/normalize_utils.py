@@ -3,7 +3,7 @@ warnings.filterwarnings('ignore')
 
 import torch
 import torch.nn as nn
-
+import torch.functional as F
 class GhostBatchNorm(nn.BatchNorm2d):
     """
     From : https://github.com/davidcpage/cifar10-fast/blob/master/bag_of_tricks.ipynb
@@ -36,12 +36,12 @@ class GhostBatchNorm(nn.BatchNorm2d):
     def forward(self, input):
         N, C, H, W = input.shape
         if self.training or not self.track_running_stats:
-            return f.batch_norm(
+            return F.batch_norm(
                 input.view(-1, C*self.num_splits, H, W), self.running_mean, self.running_var, 
                 self.weight.repeat(self.num_splits), self.bias.repeat(self.num_splits),
                 True, self.momentum, self.eps).view(N, C, H, W) 
         else:
-            return f.batch_norm(
+            return F.batch_norm(
                 input, self.running_mean[:self.num_features], self.running_var[:self.num_features], 
                 self.weight, self.bias, False, self.momentum, self.eps)
 
