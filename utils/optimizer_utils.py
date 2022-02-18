@@ -1,6 +1,7 @@
 import warnings
 warnings.filterwarnings('ignore')
 
+import numpy as np
 import torch
 from torch.optim import SGD
 from torch.optim.lr_scheduler import StepLR,ReduceLROnPlateau
