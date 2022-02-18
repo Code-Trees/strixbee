@@ -12,6 +12,9 @@ from strixbee.utils.data_transforms import AlbumDataset
 from strixbee.model.cifar10_model import Cifar10Net1
 
 
+def print_lr(optimizer):
+    for parameters in optimizer.param_groups:
+        return parameters['lr']
 
 def run_lrfinder(model_obj,train_loader,test_loader,loss_type=None,loops = 2):
     lrs = []
