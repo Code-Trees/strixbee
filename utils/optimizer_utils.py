@@ -12,7 +12,7 @@ from strixbee.model.cifar10_model import Cifar10Net1
 
 
 
-def run_lrfinder(model_obj,train_loader,loss_type=None,loops = 2):
+def run_lrfinder(model_obj,train_loader,test_loader,loss_type=None,loops = 2):
     lrs = []
     for i in range(0,loops):
 
