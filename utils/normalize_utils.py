@@ -41,7 +41,7 @@ class GhostBatchNorm(nn.BatchNorm2d):
                 self.weight.repeat(self.num_splits), self.bias.repeat(self.num_splits),
                 True, self.momentum, self.eps).view(N, C, H, W) 
         else:
-            return F.batch_norm(
+            return f.batch_norm(
                 input, self.running_mean[:self.num_features], self.running_var[:self.num_features], 
                 self.weight, self.bias, False, self.momentum, self.eps)
 
