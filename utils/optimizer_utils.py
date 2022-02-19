@@ -25,7 +25,6 @@ def get_optimizer(model_obj,loss_type=None,scheduler = False):
     else:
         return optimizer,_
 
-
 #
 #L1 Loss
 
