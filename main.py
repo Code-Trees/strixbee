@@ -27,13 +27,13 @@ from albumentations.pytorch.transforms import ToTensorV2
 
 from rf_calc import receptive_field
 
-from strixbee.utils.data_iter import get_data,get_data_stats
-from strixbee.utils.data_transforms import AlbumDataset
-from strixbee.utils.optimizer_utils import *
-from strixbee.utils.train_test import *
-from strixbee.utils.gpu import clean_gpu
-from strixbee.utils.plots import * 
-from strixbee.utils import * 
+from utils.data_iter import get_data,get_data_stats
+from utils.data_transforms import AlbumDataset
+from utils.optimizer_utils import *
+from utils.train_test import *
+from utils.gpu import clean_gpu
+from utils.plots import * 
+from utils import * 
 
 from model.cifar10_model import Cifar10Net1
 
@@ -71,7 +71,7 @@ def Run_Model(model_class,train_loader,test_loader,epochs , L1 = False):
         test_accuracy.append(test_acc)
         test_losses.append(test_loss)
         
-        scheduler.step(train_loss)
+        scheduler.step()
         try:
             if (EPOCHS >=3)&(max(test_accuracy[:-1]) < test_accuracy[-1]) & (max(test_accuracy) >= .85):
                 checkpoint = {'epoch': EPOCHS + 1,'valid_loss_min': test_losses[-1],'state_dict': model.state_dict(),'optimizer': optimizer.state_dict(),} # Export to TorchScript
@@ -80,7 +80,7 @@ def Run_Model(model_class,train_loader,test_loader,epochs , L1 = False):
         except:
             print('Model Saving Failed !!')
 
-        # print ("LR :{}\n".format(scheduler.get_lr()[0]))
+        print ("LR :{}\n".format(scheduler.get_lr()[0]))
     return model,train_losses, train_accuracy,test_losses,test_accuracy
 
 
@@ -93,6 +93,8 @@ def import_or_install(package):
         
         
 if __name__ == "__main__":
+    import_or_install(opencv-python)
+    
     batch_size = 64
     epochs = 5
 

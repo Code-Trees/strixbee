@@ -4,7 +4,6 @@ from torchvision import transforms,datasets
 from torch.utils.data import DataLoader
 
 import matplotlib.pyplot as plt
-import seaborn as sns
 import numpy as np
 
 def get_data(train_transform_composes =None ,test_transform_composes =None):
