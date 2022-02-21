@@ -43,8 +43,8 @@ class AlbumDataset(Dataset):
             transform (callable, optional): Optional transform to be applied
                 on a sample.
         """
-        self.train = data.data
-        self.label = data.targets
+        self.train = train.data
+        self.label = train.targets
         self.transform = transform
 
     def __len__(self):
