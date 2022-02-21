@@ -35,7 +35,7 @@ train,test = get_data()
 class AlbumDataset(Dataset):
     """Face Landmarks dataset."""
 
-    def __init__(self, data,transform=None):
+    def __init__(self, data_t,transform=None):
         """
         Args:
             csv_file (string): Path to the csv file with annotations.
@@ -43,8 +43,8 @@ class AlbumDataset(Dataset):
             transform (callable, optional): Optional transform to be applied
                 on a sample.
         """
-        self.train = train.data
-        self.label = train.targets
+        self.train = data_t.data
+        self.label = data_t.targets
         self.transform = transform
 
     def __len__(self):
