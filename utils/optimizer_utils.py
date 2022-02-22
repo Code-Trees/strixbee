@@ -31,7 +31,7 @@ def get_optimizer(model_obj,loss_type=None,scheduler = False,scheduler_type = 's
     optimizer = SGD( params = parameters,lr = lr,momentum = 0.9 )
     
     if (scheduler == True) & (scheduler_type == 'steplr'):
-        scheduler = StepLR(optimizer,step_size = 20,gamma=0.1)
+        scheduler = StepLR(optimizer,step_size = 35,gamma=0.1)
         return optimizer,scheduler
 
     elif (scheduler == True) & (scheduler_type == 'reducelronplateau'):
