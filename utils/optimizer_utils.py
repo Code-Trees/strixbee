@@ -26,7 +26,7 @@ def get_optimizer(model_obj,loss_type=None,scheduler = False,scheduler_type = 's
     loss_type= str(loss_type).upper()
     parameters = model_obj.parameters()
 
-
+   
     # optimizer = SGD( params = model_obj.parameters(),lr = lr,momentum = 0.9,weight_decay= 0.001 if loss_type =='L2' else 0 )
     optimizer = SGD( params = parameters,lr = lr,momentum = 0.9 )
     
