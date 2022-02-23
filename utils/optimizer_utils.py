@@ -26,17 +26,17 @@ def get_optimizer(model_obj,loss_type=None,scheduler = False,scheduler_type = 's
     loss_type= str(loss_type).upper()
     parameters = model_obj.parameters()
 
-
+   
     # optimizer = SGD( params = model_obj.parameters(),lr = lr,momentum = 0.9,weight_decay= 0.001 if loss_type =='L2' else 0 )
     optimizer = SGD( params = parameters,lr = lr,momentum = 0.9 )
     
     if (scheduler == True) & (scheduler_type == 'steplr'):
-        scheduler = StepLR(optimizer,step_size = 20,gamma=0.1)
+        scheduler = StepLR(optimizer,step_size = 27,gamma=0.1)
         return optimizer,scheduler
 
     elif (scheduler == True) & (scheduler_type == 'reducelronplateau'):
 
-        scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.01, patience=7, verbose=True, threshold=0.0001,threshold_mode='rel', cooldown=0, min_lr=1e-7, eps=1e-08)
+        scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.01, patience=5, verbose=True, threshold=0.0001,threshold_mode='rel', cooldown=0, min_lr=1e-7, eps=1e-08)
         return optimizer,scheduler
     else:
         return optimizer
