@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from .gradcam import GradCam
-from CIFAR_10.utils import denormalize
+# from CIFAR_10.utils import denormalize
+from utils.plot import convert_image_np
 
 class VisualizeCam(object):
 
@@ -52,11 +53,11 @@ class VisualizeCam(object):
 		for i in range(len(images)):
 			img = images[i]
 			results_data = [{
-				"img": denormalize(img),
+				"img": convert_image_np(img),
 				"label": "Result:"
 			}]
 			heatmaps_data = [{
-				"img": denormalize(img),
+				"img": convert_image_np(img),
 				"label": "Heatmap:"
 			}]
 			for layer in target_layers:
