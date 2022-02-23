@@ -1,6 +1,6 @@
 import torch
 from torch.nn import functional as F
-
+#
 class GradCam(object):
 
 	def __init__(self, model, target_layers, num_classes):
