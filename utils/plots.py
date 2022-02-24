@@ -118,5 +118,5 @@ def print_wrong_image(model,data_loader,mean,std,l,b):
             break
     _ = plt.autoscale()
     _= plt.show()
-    return None
+    return wrong_images,wrong_labels,right_labels
 
