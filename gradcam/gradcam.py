@@ -1,79 +1,208 @@
+from collections import Sequence
+
+import numpy as np
 import torch
+import torch.nn as nn
 from torch.nn import functional as F
-#
-class GradCam(object):
+from tqdm import tqdm
 
-	def __init__(self, model, target_layers, num_classes):
-		super(GradCam, self).__init__()
-		self.model = model
-		self.target_layers = target_layers
-		self.num_classes = num_classes
-		self.device = next(model.parameters()).device
 
-		self.activations_map = {}
-		self.gradients_map = {}
+class _BaseWrapper(object):
+    def __init__(self, model):
+        super(_BaseWrapper, self).__init__()
+        self.device = next(model.parameters()).device
+        self.model = model
+        self.handlers = []  # a set of hook function handlers
 
-		self.model.eval()
-		self.register_hooks()
+    def _encode_one_hot(self, ids):
+        one_hot = torch.zeros_like(self.logits).to(self.device)
+        one_hot.scatter_(1, ids, 1.0)
+        return one_hot
 
-	def register_hooks(self):
-		def _wrap_forward_hook(layer_name):
-			def _forward_hook(module, input, output):
-				self.activations_map[layer_name] = output.detach()
-			return _forward_hook
+    def forward(self, image):
+        self.image_shape = image.shape[2:]
+        self.logits = self.model(image)
+        self.probs = F.softmax(self.logits, dim=1)
+        return self.probs.sort(dim=1, descending=True)  # ordered results
 
-		def _wrap_backward_hook(layer_name):
-			def _backward_hook(module, grad_out, grad_in):
-				self.gradients_map[layer_name] = grad_out[0].detach()
-			return _backward_hook
-		
-		for name, module in self.model.named_modules():
-			if name in self.target_layers:
-				module.register_forward_hook(_wrap_forward_hook(name))
-				module.register_backward_hook(_wrap_backward_hook(name))
+    def backward(self, ids):
+        """
+        Class-specific backpropagation
+        """
+        one_hot = self._encode_one_hot(ids)
+        self.model.zero_grad()
+        self.logits.backward(gradient=one_hot, retain_graph=True)
 
-	def make_one_hots(self, target_class=None):
-		one_hots = torch.zeros_like(self.output)
-		if target_class:
-			ids = torch.LongTensor([[target_class]] * self.batch_size).to(self.device)
-			one_hots.scatter_(1,ids,1.0)
-		else:
-			one_hots = torch.zeros((self.batch_size, self.num_classes)).to(self.device)
-			for i in range(len(self.pred)):
-			  one_hots[i][self.pred[i][0]] = 1.0
-		return one_hots
+    def generate(self):
+        raise NotImplementedError
 
-	def forward(self, data):
-		self.batch_size, self.img_ch, self.img_h, self.img_w = data.shape
-		data = data.to(self.device)
-		self.output = self.model(data)
-		self.pred = self.output.argmax(dim=1, keepdim=True)
+    def remove_hook(self):
+        """
+        Remove all the forward/backward hook functions
+        """
+        for handle in self.handlers:
+            handle.remove()
 
-	def backward(self, target_class=None):
-		one_hots = self.make_one_hots(target_class)
-		self.model.zero_grad()
-		self.output.backward(gradient=one_hots, retain_graph=True)
 
-	def __call__(self, data, target_layers, target_class=None):
-		self.forward(data)
-		self.backward(target_class)
+class BackPropagation(_BaseWrapper):
+    def forward(self, image):
+        self.image = image.requires_grad_()
+        return super(BackPropagation, self).forward(self.image)
 
-		output = self.output
-		saliency_maps = {}
-		for target_layer in target_layers:
-			activations = self.activations_map[target_layer]	#[64, 512, 4, 4]
-			grads = self.gradients_map[target_layer]	#[64, 512, 4, 4]
-			weights = F.adaptive_avg_pool2d(grads, 1)	#[64, 512, 1, 1]
+    def generate(self):
+        gradient = self.image.grad.clone()
+        self.image.grad.zero_()
+        return gradient
 
-			saliency_map = torch.mul(activations, weights).sum(dim=1, keepdim=True)	
-			saliency_map = F.relu(saliency_map)	#[64,1,4,4]
-			saliency_map = F.interpolate(saliency_map, (self.img_h, self.img_w),
-				mode="bilinear", align_corners=False)	#[64,1,32,32]
 
-			saliency_map = saliency_map.view(self.batch_size, -1)
-			saliency_map -= saliency_map.min(dim=1, keepdim=True)[0]
-			saliency_map /= saliency_map.max(dim=1, keepdim=True)[0]
-			saliency_map = saliency_map.view(self.batch_size, 1, self.img_h, self.img_w)
-			saliency_maps[target_layer] = saliency_map
+class GuidedBackPropagation(BackPropagation):
+    """
+    "Striving for Simplicity: the All Convolutional Net"
+    https://arxiv.org/pdf/1412.6806.pdf
+    Look at Figure 1 on page 8.
+    """
 
-		return saliency_maps, self.pred
+    def __init__(self, model):
+        super(GuidedBackPropagation, self).__init__(model)
+
+        def backward_hook(module, grad_in, grad_out):
+            # Cut off negative gradients
+            if isinstance(module, nn.ReLU):
+                return (F.relu(grad_in[0]),)
+
+        for module in self.model.named_modules():
+            self.handlers.append(module[1].register_backward_hook(backward_hook))
+
+
+class Deconvnet(BackPropagation):
+    """
+    "Striving for Simplicity: the All Convolutional Net"
+    https://arxiv.org/pdf/1412.6806.pdf
+    Look at Figure 1 on page 8.
+    """
+
+    def __init__(self, model):
+        super(Deconvnet, self).__init__(model)
+
+        def backward_hook(module, grad_in, grad_out):
+            # Cut off negative gradients and ignore ReLU
+            if isinstance(module, nn.ReLU):
+                return (F.relu(grad_out[0]),)
+
+        for module in self.model.named_modules():
+            self.handlers.append(module[1].register_backward_hook(backward_hook))
+
+
+class GradCAM(_BaseWrapper):
+    """
+    "Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization"
+    https://arxiv.org/pdf/1610.02391.pdf
+    Look at Figure 2 on page 4
+    """
+
+    def __init__(self, model, candidate_layers=None):
+        super(GradCAM, self).__init__(model)
+        self.fmap_pool = {}
+        self.grad_pool = {}
+        self.candidate_layers = candidate_layers  # list
+
+        def save_fmaps(key):
+            def forward_hook(module, input, output):
+                self.fmap_pool[key] = output.detach()
+
+            return forward_hook
+
+        def save_grads(key):
+            def backward_hook(module, grad_in, grad_out):
+                self.grad_pool[key] = grad_out[0].detach()
+
+            return backward_hook
+
+        # If any candidates are not specified, the hook is registered to all the layers.
+        for name, module in self.model.named_modules():
+            if self.candidate_layers is None or name in self.candidate_layers:
+                self.handlers.append(module.register_forward_hook(save_fmaps(name)))
+                self.handlers.append(module.register_backward_hook(save_grads(name)))
+
+    def _find(self, pool, target_layer):
+        if target_layer in pool.keys():
+            return pool[target_layer]
+        else:
+            raise ValueError("Invalid layer name: {}".format(target_layer))
+
+    def generate(self, target_layer):
+        fmaps = self._find(self.fmap_pool, target_layer)
+        grads = self._find(self.grad_pool, target_layer)
+        weights = F.adaptive_avg_pool2d(grads, 1)
+
+        gcam = torch.mul(fmaps, weights).sum(dim=1, keepdim=True)
+        gcam = F.relu(gcam)
+        gcam = F.interpolate(
+            gcam, self.image_shape, mode="bilinear", align_corners=False
+        )
+
+        B, C, H, W = gcam.shape
+        gcam = gcam.view(B, -1)
+        gcam -= gcam.min(dim=1, keepdim=True)[0]
+        gcam /= gcam.max(dim=1, keepdim=True)[0]
+        gcam = gcam.view(B, C, H, W)
+
+        return gcam
+
+
+def occlusion_sensitivity(
+    model, images, ids, mean=None, patch=35, stride=1, n_batches=128
+):
+    """
+    "Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization"
+    https://arxiv.org/pdf/1610.02391.pdf
+    Look at Figure A5 on page 17
+    Originally proposed in:
+    "Visualizing and Understanding Convolutional Networks"
+    https://arxiv.org/abs/1311.2901
+    """
+
+    torch.set_grad_enabled(False)
+    model.eval()
+    mean = mean if mean else 0
+    patch_H, patch_W = patch if isinstance(patch, Sequence) else (patch, patch)
+    pad_H, pad_W = patch_H // 2, patch_W // 2
+
+    # Padded image
+    images = F.pad(images, (pad_W, pad_W, pad_H, pad_H), value=mean)
+    B, _, H, W = images.shape
+    new_H = (H - patch_H) // stride + 1
+    new_W = (W - patch_W) // stride + 1
+
+    # Prepare sampling grids
+    anchors = []
+    grid_h = 0
+    while grid_h <= H - patch_H:
+        grid_w = 0
+        while grid_w <= W - patch_W:
+            grid_w += stride
+            anchors.append((grid_h, grid_w))
+        grid_h += stride
+
+    # Baseline score without occlusion
+    baseline = model(images).detach().gather(1, ids)
+
+    # Compute per-pixel logits
+    scoremaps = []
+    for i in tqdm(range(0, len(anchors), n_batches), leave=False):
+        batch_images = []
+        batch_ids = []
+        for grid_h, grid_w in anchors[i : i + n_batches]:
+            images_ = images.clone()
+            images_[..., grid_h : grid_h + patch_H, grid_w : grid_w + patch_W] = mean
+            batch_images.append(images_)
+            batch_ids.append(ids)
+        batch_images = torch.cat(batch_images, dim=0)
+        batch_ids = torch.cat(batch_ids, dim=0)
+        scores = model(batch_images).detach().gather(1, batch_ids)
+        scoremaps += list(torch.split(scores, B))
+
+    diffmaps = torch.cat(scoremaps, dim=1) - baseline
+    diffmaps = diffmaps.view(B, new_H, new_W)
+
+    return diffmaps
