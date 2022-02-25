@@ -17,7 +17,7 @@ class VisualizeCam(object):
 		self.device = next(model.parameters()).device
         self.mean = mean
         self.std = std
-		self.gcam = GradCam(model, target_layers, len(classes))
+        self.gcam = GradCam(model, target_layers, len(classes))
 		
 	def visualize_cam(self, mask, img):
 	    heatmap = (255 * mask.squeeze()).type(torch.uint8).cpu().numpy()
