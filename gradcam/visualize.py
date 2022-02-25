@@ -10,11 +10,11 @@ from strixbee.utils.plots import convert_image_np
 class VisualizeCam(object):
 
 	def __init__(self, model, classes, target_layers,mean,std):
-		super(VisualizeCam, self).__init__()
-		self.model = model
-		self.classes = classes
-		self.target_layers = target_layers
-		self.device = next(model.parameters()).device
+        super(VisualizeCam, self).__init__()
+        self.model = model
+        self.classes = classes
+        self.target_layers = target_layers
+        self.device = next(model.parameters()).device
         self.mean = mean
         self.std = std
         self.gcam = GradCam(model, target_layers, len(classes))
