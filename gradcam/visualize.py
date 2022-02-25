@@ -38,6 +38,7 @@ class VisualizeCam(object):
 
         for ax, data in zip(axs.flat, img_data):
             img = data["img"]
+            img = torch.tensor(img)
             img = img.cpu().numpy()
             maxValue = np.amax(img)
             minValue = np.amin(img)
