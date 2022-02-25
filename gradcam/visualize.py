@@ -9,7 +9,7 @@ from strixbee.utils.plots import convert_image_np
 
 class VisualizeCam(object):
 
-	def __init__(self, model, classes, target_layers,mean,std):
+    def __init__(self, model, classes, target_layers,mean,std):
         super(VisualizeCam, self).__init__()
         self.model = model
         self.classes = classes
