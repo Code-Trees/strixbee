@@ -3,7 +3,7 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 
-from .gradcam import GradCam
+from strixbee.gradcam import GradCam
 # from CIFAR_10.utils import denormalize
 from utils.plot import convert_image_np
 
