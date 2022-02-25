@@ -43,10 +43,10 @@ class VisualizeCam(object):
             type(img)
             maxValue = np.amax(img)
             minValue = np.amin(img)
-            img = np.clip(img, 0, 1)
-            img = img/np.amax(img)
-            img = np.clip(img, 0, 1)
-            ax.imshow(np.transpose(img, (1, 2, 0)))
+            # img = np.clip(img, 0, 1)
+            # img = img/np.amax(img)
+            # img = np.clip(img, 0, 1)
+            ax.imshow(img)
             ax.set_title("%s" % (data["label"]))
 
     def __call__(self, images, target_layers, target_inds=None, metric=""):
