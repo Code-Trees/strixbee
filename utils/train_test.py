@@ -19,7 +19,8 @@ def trainning(model,device,train_data,optimizer,epochs,L1 = False,L2= False):
         data,target = data.to(device),target.to(device)
         optimizer.zero_grad()
         output = model(data)
-        loss = F.nll_loss(output,target)
+        loss = F.cross_entropy(output,target)
+        # loss = F.nll_loss(output,target)
         if L1 == True:
             loss = L1_loss(model,loss)
 
@@ -49,7 +50,7 @@ def testing(model,device,test_data,optimizer,epochs):
             data,target = data.to(device),target.to(device)
 
             output = model(data)
-            test_loss += F.nll_loss(output,target,reduce='sum').item()
+            test_loss += F.cross_entropy(output,target,reduce='sum').item()
             pred  = output.argmax(dim =1,keepdim = True)
 
             correct += pred.eq(target.view_as(pred)).sum().item()
