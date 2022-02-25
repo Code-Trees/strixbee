@@ -9,13 +9,14 @@ from strixbee.utils.plots import convert_image_np
 
 class VisualizeCam(object):
 
-	def __init__(self, model, classes, target_layers):
+	def __init__(self, model, classes, target_layers,mean,std):
 		super(VisualizeCam, self).__init__()
 		self.model = model
 		self.classes = classes
 		self.target_layers = target_layers
 		self.device = next(model.parameters()).device
-
+        self.mean = mean
+        self.std = std
 		self.gcam = GradCam(model, target_layers, len(classes))
 		
 	def visualize_cam(self, mask, img):
@@ -53,11 +54,11 @@ class VisualizeCam(object):
 		for i in range(len(images)):
 			img = images[i]
 			results_data = [{
-				"img": convert_image_np(img),
+				"img": convert_image_np(img,self.mean,self.std),
 				"label": "Result:"
 			}]
 			heatmaps_data = [{
-				"img": convert_image_np(img),
+				"img": convert_image_np(img,self.mean,self.std),
 				"label": "Heatmap:"
 			}]
 			for layer in target_layers:
