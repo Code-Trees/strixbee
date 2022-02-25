@@ -6,8 +6,12 @@ import numpy as np
 from strixbee.gradcam.gradcam import GradCam
 # from CIFAR_10.utils import denormalize
 from strixbee.utils.plots import convert_image_np
+from strixbee.utils.data_iter import get_data
 
-def denormalize(tensor, mean=[0.4914, 0.4822, 0.4465], std=[0.2023, 0.1994, 0.2010]):
+def denormalize(tensor, mean=None, std=None):
+    train,test = get_data()
+    mean,std = get_data_stats(train,test,img_norm_typ ='train',plot = False)
+    
     single_img = False
     if tensor.ndimension() == 3:
       single_img = True
@@ -59,7 +63,6 @@ class VisualizeCam(object):
 			img = np.clip(img, 0, 1)
 			ax.imshow(np.transpose(img, (1, 2, 0)))
 			ax.set_title("%s" % (data["label"]))
-
 
 
 	def __call__(self, images, target_layers, target_inds=None, metric=""):
