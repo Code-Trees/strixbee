@@ -1,7 +1,5 @@
 import warnings
 warnings.filterwarnings('ignore')
-import warnings
-warnings.filterwarnings('ignore')
 
 import torch
 import torch.nn.functional as F
