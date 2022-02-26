@@ -7,7 +7,7 @@ import torch.nn as nn
 
 from tqdm import tqdm
 
-def trainning(model,device,train_data,optimizer,epochs,L1 = False,L2= False):
+def trainning(model,device,train_data,optimizer,epochs,scheduler = None,L1 = False,L2= False):
     total_loss = 0
     correct = 0
     processed = 0
@@ -27,6 +27,8 @@ def trainning(model,device,train_data,optimizer,epochs,L1 = False,L2= False):
         total_loss += loss
         loss.backward()
         optimizer.step()
+        if scheduler != None:
+            scheduler.step ()
         correct += output.argmax(dim = 1).eq(target).sum().item()
         processed += len(data)
         pbar.set_description(f"Train ==> Epochs: {epochs} Batch:  {index_id} loss: {loss} Accuracy: { correct/processed *100 :.2f}% ")
