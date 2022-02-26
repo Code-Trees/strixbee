@@ -45,7 +45,11 @@ class ConvBlock(nn.Module):
         self.dilation = dilation
 
         self.conv = nn.Conv2d(in_channels=self.in_channels, out_channels=self.out_channels,kernel_size=self.kernel_size,stride =self.stride,padding = self.padding,dilation =self.dilation ,bias = False)
-        self.norm = Normalize(norm_type = self.norm_type ,num_features= self.out_channels)
+        
+        if self.norm_type in ['bn','gbn']:
+            self.norm = Normalize(norm_type = self.norm_type ,num_features= self.out_channels)
+        else:
+            pass
         self.relu = nn.ReLU()
         self.drop = nn.Dropout2d(p = self.dropout_val)
 
