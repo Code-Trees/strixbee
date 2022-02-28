@@ -36,7 +36,7 @@ class VisualizeCam(object):
 
 		self.gcam = GradCam(model, target_layers, len(classes))
 		self.train,self.test = get_data()
-		self.mean,self.std = get_data_stats(train,test,img_norm_typ ='train',plot = False)
+		self.mean,self.std = get_data_stats(self.train,self.test,img_norm_typ ='train',plot = False)
 
 	def visualize_cam(self, mask, img):
 	    heatmap = (255 * mask.squeeze()).type(torch.uint8).cpu().numpy()
