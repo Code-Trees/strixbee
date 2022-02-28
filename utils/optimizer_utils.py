@@ -41,7 +41,7 @@ def get_optimizer(model_obj,loss_type=None,scheduler = False,scheduler_type = 's
     else:
         return optimizer
 
-def run_lrfinder(model_obj,device,optimizer,train_loader,test_loader,start_lr,end_lr,loss_type=None):
+def run_lrfinder(model_obj,device,train_loader,test_loader,start_lr,end_lr,loss_type=None):
     lrs  =[]
     # device = 'cuda' if torch.cuda.is_available() else 'cpu'
     num_iter = 10*5 * len(train_loader)
