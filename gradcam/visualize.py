@@ -8,7 +8,7 @@ from strixbee.gradcam.gradcam import GradCam
 from strixbee.utils.plots import convert_image_np
 from strixbee.utils.data_iter import get_data,get_data_stats
 
-def denormalize(tensor,,train,test, mean=None, std=None):
+def denormalize(tensor,train,test, mean=None, std=None):
     # train,test = get_data()
     # mean,std = get_data_stats(train,test,img_norm_typ ='train',plot = False)
     
