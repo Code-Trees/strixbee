@@ -51,7 +51,7 @@ class ResNetc(nn.Module):
         
         self.pool = nn.MaxPool2d(kernel_size=(4,4),stride = 2)
 
-        self.fc = nn.Linear(in_features = 512, out_features = 10, bias=False)
+        self.fc = nn.Linear(in_features = 512, out_features = 10, bias=True)
 
     def forward(self,X):
         X = self.prep_layer(X)

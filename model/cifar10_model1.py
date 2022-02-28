@@ -46,7 +46,7 @@ from strixbee.model.custom_layer import *
 
         # self.conv_block1 = nn.Conv2d(in_channels=128,out_channels=32,kernel_size = (1,1),stride = 1, padding =0,bias= False)
         # self.conv_block2 = nn.Conv2d(in_channels=32,out_channels=32,kernel_size = (3,3),stride = 1, padding =0,dilation =2,bias= False)
-        self.conv_block3 = nn.Conv2d(in_channels=32,out_channels=64,kernel_size = (3,3),stride = 1, padding =0,bias= False)
+        self.conv_block3 = nn.Conv2d(in_channels=32,out_channels=64,kernel_size = (3,3),stride = 1, padding =0,bias= True)
         
         
         self.GAP = nn.AdaptiveAvgPool2d(output_size=(1,1))
