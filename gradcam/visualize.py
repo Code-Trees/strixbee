@@ -8,9 +8,9 @@ from strixbee.gradcam.gradcam import GradCam
 from strixbee.utils.plots import convert_image_np
 from strixbee.utils.data_iter import get_data,get_data_stats
 
-def denormalize(tensor, mean=None, std=None):
-    train,test = get_data()
-    mean,std = get_data_stats(train,test,img_norm_typ ='train',plot = False)
+def denormalize(tensor,,train,test, mean=None, std=None):
+    # train,test = get_data()
+    # mean,std = get_data_stats(train,test,img_norm_typ ='train',plot = False)
     
     single_img = False
     if tensor.ndimension() == 3:
@@ -35,7 +35,9 @@ class VisualizeCam(object):
 		self.device = next(model.parameters()).device
 
 		self.gcam = GradCam(model, target_layers, len(classes))
-		
+		self.train,self.test = get_data()
+		self.mean,self.std = get_data_stats(train,test,img_norm_typ ='train',plot = False)
+
 	def visualize_cam(self, mask, img):
 	    heatmap = (255 * mask.squeeze()).type(torch.uint8).cpu().numpy()
 	    heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
@@ -70,11 +72,11 @@ class VisualizeCam(object):
 		for i in range(len(images)):
 			img = images[i]
 			results_data = [{
-				"img": denormalize(img),
+				"img": denormalize(img,self.train,self.test,self.mean,self.std),
 				"label": "Result:"
 			}]
 			heatmaps_data = [{
-				"img": denormalize(img),
+				"img": denormalize(img,self.train,self.test,self.mean,self.std),
 				"label": "Heatmap:"
 			}]
 			for layer in target_layers:
