@@ -41,25 +41,25 @@ def get_optimizer(model_obj,loss_type=None,scheduler = False,scheduler_type = 's
     else:
         return optimizer
 
-def run_lrfinder(model_obj,train_loader,test_loader,loss_type=None,loops = 2):
-    lrs = []
-    for i in range(0,loops):
+def run_lrfinder(model_obj,train_loader,test_loader,start_lr,end_lr,loss_type=None):
+    lrs  =[]
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    num_iter = 10 * len(train_loader)
 
-        opti = SGD( params = model_obj.parameters(),lr = 1e-7,momentum = 0.9,weight_decay= 0.001 if loss_type =='L2' else 0)
+    for i in range(0,len(start_lr)):
+        opti = SGD( params = model_obj.parameters(),lr = start_lr[i],momentum = 0.9)
         criterion = nn.CrossEntropyLoss()
-        lr_finder = LRFinder(model_obj,opti,criterion,device = 'cuda' if torch.cuda.is_available() else 'cpu')
-        lr_finder.range_test(train_loader ,val_loader = test_loader,end_lr = 10,num_iter = 70,step_mode = 'exp')
+        lr_finder = LRFinder(model_obj,opti,criterion,device = device)
+        lr_finder.range_test(train_loader ,end_lr=end_lr[i], num_iter=num_iter, step_mode='linear')
         try:
             grapg,lr_rate = lr_finder.plot()
         except:
             pass
-        print (f"Lr for min loss :{lr_finder.history['lr'][np.argmin(lr_finder.history['loss'])]},\n loss for suggestd lr  {lr_finder.history['loss'][lr_finder.history['lr'].index(lr_rate)]}")
+        print(f"Loss: {lr_finder.best_loss} LR :{lr_rate}")
         lr_finder.reset()
-
-        print(f"Learning rate as LRFinder :{lr_rate}")
         lrs.append(lr_rate)
 
-        opti = SGD( params = model_obj.parameters(),lr =lr_rate,momentum = 0.9,weight_decay= 0.001 if loss_type =='L2' else 0)
+        opti = SGD( params = model_obj.parameters(),lr =lr_rate,momentum = 0.9)
         print(opti)
     return lrs
 
