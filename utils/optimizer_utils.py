@@ -41,13 +41,13 @@ def get_optimizer(model_obj,loss_type=None,scheduler = False,scheduler_type = 's
     else:
         return optimizer
 
-def run_lrfinder(model_obj,device,train_loader,test_loader,start_lr,end_lr,loss_type=None):
+def run_lrfinder(model_obj,device,optimizer,train_loader,test_loader,start_lr,end_lr,loss_type=None):
     lrs  =[]
     # device = 'cuda' if torch.cuda.is_available() else 'cpu'
     num_iter = 10*5 * len(train_loader)
 
     for i in range(0,len(start_lr)):
-        opti = SGD( params = model_obj.parameters(),lr = start_lr[i],momentum = 0.9)
+        opti = optimizer 
         criterion = nn.CrossEntropyLoss()
         lr_finder = LRFinder(model_obj,opti,criterion,device = device)
         lr_finder.range_test(train_loader ,end_lr=end_lr[i], num_iter=num_iter, step_mode='linear')

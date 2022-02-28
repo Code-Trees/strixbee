@@ -6,7 +6,7 @@ import numpy as np
 from strixbee.gradcam.gradcam import GradCam
 # from CIFAR_10.utils import denormalize
 from strixbee.utils.plots import convert_image_np
-from strixbee.utils.data_iter import get_data
+from strixbee.utils.data_iter import get_data,get_data_stats
 
 def denormalize(tensor, mean=None, std=None):
     train,test = get_data()
