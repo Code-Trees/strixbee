@@ -47,7 +47,7 @@ def run_lrfinder(model_obj,device,train_loader,test_loader,start_lr,end_lr,loss_
     num_iter = 15*len(train_loader)
 
     for i in range(0,len(start_lr)):
-        opti = SGD( params = model_obj.parameters(),lr = start_lr[i],momentum = 0.9) 
+        opti = SGD( params = model_obj.parameters(),lr = start_lr[i],momentum = 0.9,weight_decay = 0.03) 
         criterion = nn.CrossEntropyLoss()
         lr_finder = LRFinder(model_obj,opti,criterion,device = device)
         lr_finder.range_test(train_loader ,end_lr=end_lr[i], num_iter=num_iter, step_mode='linear')
@@ -59,7 +59,7 @@ def run_lrfinder(model_obj,device,train_loader,test_loader,start_lr,end_lr,loss_
         lr_finder.reset()
         lrs.append(lr_rate)
 
-        opti = SGD( params = model_obj.parameters(),lr =lr_rate,momentum = 0.9)
+        opti = SGD( params = model_obj.parameters(),lr =lr_rate,momentum = 0.9,weight_decay = 0.03)
         print(opti)
     return lrs
 
