@@ -61,7 +61,7 @@ def run_lrfinder(model_obj,device,train_loader,test_loader,start_lr,end_lr,loss_
         lrs.append(lr_rate)
 
         opti = SGD(SGD( params = model_obj.parameters(),lr = lr_rate,momentum = 0.9,nesterov=True, weight_decay=0)
-    return lrs
+    return opti
 
 #L1 Loss
 
