@@ -1,31 +1,3 @@
-Skip to content
-Search or jump to…
-Pull requests
-Issues
-Marketplace
-Explore
- 
-@Code-Trees 
-BirenderPanwar
-/
-EVA4_Phase1
-Public
-Code
-Issues
-Pull requests
-Actions
-Projects
-Wiki
-Security
-Insights
-EVA4_Phase1/session11/models/resnet_custom.py /
-@BirenderPanwar
-BirenderPanwar Add files via upload
-Latest commit ad6c092 on 12 Apr 2020
- History
- 1 contributor
-74 lines (57 sloc)  2.34 KB
-   
 import torch
 import torchvision
 import torch.nn as nn
