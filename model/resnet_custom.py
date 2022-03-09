@@ -8,7 +8,7 @@ import torch
 import torch.nn.functional as F
 import torch.nn as nn
 
-from strixbee.model.custom_layer import *
+# from strixbee.model.custom_layer import *
 
 class Cifar_Net_R(nn.Module):
     def __init__(self,norm_type = 'bn',drop_out = 0.0): 
