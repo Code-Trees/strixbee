@@ -27,7 +27,7 @@ class Cifar_Net_R(nn.Module):
                                     )
         
         self.ResBlock1 = nn.Sequential(    
-                                    nn.Conv2d(in_channels= 128, out_channels=128 , kernel_size = (3,3), stride = 1, padding = 1,bias= False),
+                                    nn.Conv2d(in_channels= 64, out_channels=128 , kernel_size = (3,3), stride = 1, padding = 1,bias= False),
                                     nn.BatchNorm2d(num_features = 128),
                                     nn.ReLU(),
                                     nn.Conv2d(in_channels= 128, out_channels=128 , kernel_size = (3,3), stride = 1, padding = 1,bias= False),
@@ -50,7 +50,7 @@ class Cifar_Net_R(nn.Module):
                                     )
 
         self.ResBlock2 = nn.Sequential(    
-                                    nn.Conv2d(in_channels= 512, out_channels=512 , kernel_size = (3,3), stride = 1, padding = 1,bias= False),
+                                    nn.Conv2d(in_channels= 256, out_channels=512 , kernel_size = (3,3), stride = 1, padding = 1,bias= False),
                                     nn.BatchNorm2d(num_features = 512),
                                     nn.ReLU(),
                                     nn.Conv2d(in_channels= 512, out_channels=512 , kernel_size = (3,3), stride = 1, padding = 1,bias= False),
