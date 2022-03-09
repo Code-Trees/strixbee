@@ -57,7 +57,8 @@ class Cifar_Net_R(nn.Module):
                                     nn.BatchNorm2d(num_features = 512),
                                     nn.ReLU()
                                     )
-        self.pool = nn.MaxPool2d(4,4)
+        # self.pool = nn.MaxPool2d(4,4
+        self.pool = nn.AvgPool2d(kernel_size = (4,4),stride = 2)  
         self.fc = nn.Linear(in_features = 512,out_features=10)
     
     def forward(self,x):
