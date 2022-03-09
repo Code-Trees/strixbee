@@ -49,7 +49,9 @@ class ResNetc(nn.Module):
                                         ConvBlock(in_channels=512, out_channels=512, stride = 1, padding = 1, kernel_size=(3, 3), norm_type=self.norm_type, dropout_val=self.drop_val, dilation=1),
                                     )
         
-        self.pool = nn.MaxPool2d(kernel_size=(4,4),stride = 2)
+        # self.pool = nn.MaxPool2d(kernel_size=(4,4),stride = 2)
+        self.pool = nn.AvgPool2d(kernel_size = (4,4),stride = 2)    
+        
 
         self.fc = nn.Linear(in_features = 512, out_features = 10, bias=True)
 
