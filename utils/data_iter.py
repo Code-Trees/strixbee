@@ -5,14 +5,25 @@ from torch.utils.data import DataLoader
 
 import matplotlib.pyplot as plt
 import numpy as np
+from STRIX_datasets.TinyImageNet import *
 
-def get_data(train_transform_composes =None ,test_transform_composes =None):
+def get_data(data = 'Cifar10',train_transform_composes =None ,test_transform_composes =None):
     """We can compose customs , else the default is tensors 
     """
-    train = datasets.CIFAR10(root= './',download = True, train = True,transform = train_transform_composes)
+    data = data.upper()
     
-    test = datasets.CIFAR10(root= './',download = True, train = False ,transform = train_transform_composes)
+    if data == "CIFAR10":
+        train = datasets.CIFAR10(root= './',download = True, train = True,transform = train_transform_composes)
 
+        test = datasets.CIFAR10(root= './',download = True, train = False ,transform = train_transform_composes)
+        
+    elif data == "TINYIMAGENET":
+        train = STRIX_datasets.TinyImageNet(root= './',download = True, train = True,transform = train_transform_composes)
+
+        test = STRIX_datasets.TinyImageNet(root= './',download = True, train = False ,transform = train_transform_composes)
+    else:
+        print(f"Data set {data} is not coded yet in Strixbee module")
+        
     return train,test
 
 
