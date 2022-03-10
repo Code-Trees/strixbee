@@ -5,7 +5,7 @@ from torch.utils.data import DataLoader
 
 import matplotlib.pyplot as plt
 import numpy as np
-from STRIX_datasets.TinyImageNet import *
+from  strixbee.utils.STRIX_datasets.TinyImageNet import *
 
 def get_data(data = 'Cifar10',train_transform_composes =None ,test_transform_composes =None):
     """We can compose customs , else the default is tensors 
