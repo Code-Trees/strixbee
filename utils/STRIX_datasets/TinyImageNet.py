@@ -17,6 +17,7 @@ class TinyImageNet(Dataset):
 
     def __init__(self, root, train=True, transform=None, download=False, train_split=0.7):
         self.root = root
+        self.train = train
         self.transform = transform
         self.data_dir = "tiny-imagenet-200"
 
@@ -35,7 +36,6 @@ class TinyImageNet(Dataset):
 
         self.classes = list(idx_to_class.values())
 
-        # train images
         train_path = os.path.join(self.root, self.data_dir, "train")
         for class_dir in os.listdir(train_path):
             train_images_path = os.path.join(train_path, class_dir, "images")
@@ -43,7 +43,7 @@ class TinyImageNet(Dataset):
                 if image.endswith(".JPEG"):
                     self.image_paths.append(os.path.join(train_images_path, image))
                     self.targets.append(class_id[class_dir][0])
-
+        
         # val images
         val_path = os.path.join(self.root, self.data_dir, "val")
         val_images_path = os.path.join(val_path, "images")
@@ -51,7 +51,7 @@ class TinyImageNet(Dataset):
             for line in csv.reader(val_ann, delimiter="\t"):
                 self.image_paths.append(os.path.join(val_images_path, line[0]))
                 self.targets.append(class_id[line[1]][0])
-
+        
         self.indices = np.arange(len(self.targets))
 
         random_seed = 42
@@ -60,6 +60,36 @@ class TinyImageNet(Dataset):
 
         split_idx = int(len(self.indices) * train_split)
         self.indices = self.indices[:split_idx] if train else self.indices[split_idx:]
+
+        if self.train:        
+            self.data = []
+            for i in self.image_paths[0:split_idx]:    
+                img = plt.imread(i)
+                if img.shape == (64,64,3):    
+                    self.data.append(img)
+                else:
+                    im = plt.imread(i)
+                    im2 = cv2.merge((im,im,im))
+                    self.data.append(im2)
+            
+            self.data = np.vstack(self.data).reshape(-1, 3, 32, 32)
+            self.data = self.data.transpose((0, 2, 3, 1))  # convert to H
+
+        else:
+            self.data = []
+            for i in self.image_paths[split_idx:]:    
+                img = plt.imread(i)
+                if img.shape == (64,64,3):    
+                    self.data.append(img)
+                else:
+                    im = plt.imread(i)
+                    im2 = cv2.merge((im,im,im))
+                    self.data.append(im2)
+            
+            self.data = np.vstack(self.data).reshape(-1, 3, 32, 32)
+            self.data = self.data.transpose((0, 2, 3, 1))  # convert to H
+
+
 
     def get_classes(self):
         """
