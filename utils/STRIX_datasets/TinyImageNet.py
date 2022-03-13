@@ -8,6 +8,7 @@ import requests
 from PIL import Image
 from torch.utils.data import Dataset
 from tqdm import notebook
+import matplotlib.pyplot as plt
 
 
 class TinyImageNet(Dataset):
