@@ -74,8 +74,7 @@ class TinyImageNet(Dataset):
                     im2 = cv2.merge((im,im,im))
                     self.data.append(im2)
             
-            # self.data = np.vstack(self.data).reshape(-1, 3,64, 64)
-            # self.data = np.vstack(self.data)
+            self.data = np.vstack(self.data).reshape(-1,3,64,64)
             # self.data = self.data.transpose((0, 2, 3, 1))  # convert to H
 
         else:
