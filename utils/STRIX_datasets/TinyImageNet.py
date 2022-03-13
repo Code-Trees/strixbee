@@ -75,7 +75,7 @@ class TinyImageNet(Dataset):
                     self.data.append(im2)
             
             self.data = np.vstack(self.data)
-            self.data = self.data.transpose((0,1, 2, 3))  # convert to H
+            # self.data = self.data.transpose((0,1, 2, 3))  # convert to H
 
         else:
             self.data = []
