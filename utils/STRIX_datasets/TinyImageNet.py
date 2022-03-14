@@ -60,6 +60,22 @@ class TinyImageNet(Dataset):
 
         split_idx = int(len(self.indices) * train_split)
         self.indices = self.indices[:split_idx] if train else self.indices[split_idx:]
+        
+        if self.train:
+            downloaded_list = self.train_list
+        else:
+            downloaded_list = self.test_list
+
+        self.data = []
+
+        for i in train.image_paths:    
+            img = plt.imread(i)
+            if img.shape == (64,64,3):    
+                self.data.append(img)
+            else:
+                im = plt.imread(i)
+                im2 = cv2.merge((im,im,im))
+                self.data.append(im2)
 
     def get_classes(self):
         """
