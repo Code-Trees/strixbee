@@ -35,9 +35,9 @@ class TinyImageNet(Dataset):
         self.targets = []
 
         idx_to_class, class_id = self.get_classes()
-
         self.classes = list(idx_to_class.values())
-
+        self.idx_to_class = idx_to_class
+        
         train_path = os.path.join(self.root, self.data_dir, "train")
         for class_dir in os.listdir(train_path):
             train_images_path = os.path.join(train_path, class_dir, "images")
