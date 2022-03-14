@@ -63,10 +63,10 @@ class TinyImageNet(Dataset):
         split_idx = int(len(self.indices) * train_split)
         self.indices = self.indices[:split_idx] if train else self.indices[split_idx:]
         
-        if self.train:
-            downloaded_list = self.train_list
-        else:
-            downloaded_list = self.test_list
+        # if self.train:
+            # downloaded_list = self.train_list
+        # else:
+            # downloaded_list = self.test_list
 
         self.data = []
 
