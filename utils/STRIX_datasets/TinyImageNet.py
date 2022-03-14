@@ -70,7 +70,7 @@ class TinyImageNet(Dataset):
 
         self.data = []
 
-        for i in train.image_paths:    
+        for i in self.image_paths:    
             img = plt.imread(i)
             if img.shape == (64,64,3):    
                 self.data.append(img)
@@ -80,7 +80,7 @@ class TinyImageNet(Dataset):
                 self.data.append(im2)
 
         if self.train:        
-            self.data = []
+            self.data = []  
             for i in self.image_paths[0:split_idx]:    
                 img = plt.imread(i)
                 if img.shape == (64,64,3):    
