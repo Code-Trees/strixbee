@@ -74,7 +74,9 @@ class TinyImageNet(Dataset):
                 self.data.append(im2)
             
         self.targets = [self.targets[i] for i in self.indices]
-
+        self.data = np.vstack(self.data).reshape(-1,3,64,64)
+        self.data = self.data.reshape(-1,64,64,3)
+        
     def get_classes(self):
         """
         Get class labels mapping
