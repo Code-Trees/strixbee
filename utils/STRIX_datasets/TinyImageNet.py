@@ -11,12 +11,10 @@ from tqdm import notebook
 import matplotlib.pyplot as plt
 import cv2
 
-
 class TinyImageNet(Dataset):
     """
     Tiny ImageNet Dataset class.
     """
-
     def __init__(self, root, train=True, transform=None, download=False, train_split=0.7):
         self.root = root
         self.train = train
@@ -30,14 +28,15 @@ class TinyImageNet(Dataset):
 
         if not self._check_integrity():
             raise RuntimeError("Dataset not found or corrupted. You can use download=True to download it")
+        
+        idx_to_class, class_id = self.get_classes()
+        self.classes = list(idx_to_class.values())
+        self.idx_to_class = idx_to_class
 
         self.image_paths = []
         self.targets = []
 
-        idx_to_class, class_id = self.get_classes()
-        self.classes = list(idx_to_class.values())
-        self.idx_to_class = idx_to_class
-        
+        #Train images
         train_path = os.path.join(self.root, self.data_dir, "train")
         for class_dir in os.listdir(train_path):
             train_images_path = os.path.join(train_path, class_dir, "images")
@@ -46,7 +45,7 @@ class TinyImageNet(Dataset):
                     self.image_paths.append(os.path.join(train_images_path, image))
                     self.targets.append(class_id[class_dir][0])
         
-        # val images
+        #Val images
         val_path = os.path.join(self.root, self.data_dir, "val")
         val_images_path = os.path.join(val_path, "images")
         with open(os.path.join(val_path, "val_annotations.txt")) as val_ann:
@@ -62,52 +61,19 @@ class TinyImageNet(Dataset):
 
         split_idx = int(len(self.indices) * train_split)
         self.indices = self.indices[:split_idx] if train else self.indices[split_idx:]
-        
-        # if self.train:
-            # downloaded_list = self.train_list
-        # else:
-            # downloaded_list = self.test_list
 
         self.data = []
 
-        for i in self.image_paths:    
-            img = plt.imread(i)
-            if img.shape == (64,64,3):    
+        for links in self.indices:
+            img = plt.imread(self.image_paths[links])
+            if img.shape == (64,64,3):
                 self.data.append(img)
             else:
-                im = plt.imread(i)
+                im = plt.imread(self.image_paths[links])
                 im2 = cv2.merge((im,im,im))
                 self.data.append(im2)
-
-        if self.train:        
-            self.data = []  
-            for i in self.image_paths[0:split_idx]:    
-                img = plt.imread(i)
-                if img.shape == (64,64,3):    
-                    self.data.append(img)
-                else:
-                    im = plt.imread(i)
-                    im2 = cv2.merge((im,im,im))
-                    self.data.append(im2)
             
-            self.data = np.vstack(self.data).reshape(-1,3,64,64)
-            self.data = self.data.reshape(-1,64,64,3)  # convert to H
-
-        else:
-            self.data = []
-            for i in self.image_paths[split_idx:]:    
-                img = plt.imread(i)
-                if img.shape == (64,64,3):    
-                    self.data.append(img)
-                else:
-                    im = plt.imread(i)
-                    im2 = cv2.merge((im,im,im))
-                    self.data.append(im2)
-            
-            self.data = np.vstack(self.data).reshape(-1, 3, 64, 64)
-            self.data = self.data.reshape(-1,64,64,3)  # convert to H
-
-
+        self.targets = [self.targets[i] for i in self.indices]
 
     def get_classes(self):
         """
@@ -126,8 +92,9 @@ class TinyImageNet(Dataset):
         for key, value in id_dict.items():
             idx_to_class[value] = all_classes[key].replace("\n", "").split(",")[0]
             class_id[key] = (value, all_classes[key])
-
         return idx_to_class, class_id
+
+
 
     def _check_integrity(self) -> bool:
         """
