@@ -14,11 +14,11 @@ from torchvision import transforms,datasets
 from torchsummary import summary
 
 
-def plot_unique_images(data_set,labels = None):
+def plot_unique_images(data_set,labels = None,l,b):
     img_data = data_set.data
     target = data_set.targets.copy()
 
-    fig = plt.figure(figsize=(30,30))
+    fig = plt.figure(figsize=(2.5*b,5*l))
     count = 1
     unique_images_index = [random.choice(np.where(np.array(target) == search)[0]) for search in list(set(target))]
 
