@@ -14,7 +14,7 @@ from torchvision import transforms,datasets
 from torchsummary import summary
 
 
-def plot_unique_images(data_set,labels = None,l,b):
+def plot_unique_images(data_set,l,b,,labels = None):
     img_data = data_set.data
     target = data_set.targets.copy()
 
