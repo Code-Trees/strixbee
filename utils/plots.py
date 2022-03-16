@@ -19,7 +19,7 @@ def plot_unique_images(data_set,l,b,labels = None):
     img_data = data_set.data
     target = data_set.targets.copy()
 
-    fig = plt.figure(figsize=(2.5*b,5*l))
+    fig = plt.figure(figsize=(30,30))
     count = 1
     unique_images_index = [random.choice(np.where(np.array(target) == search)[0]) for search in list(set(target))]
 
