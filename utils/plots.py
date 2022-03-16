@@ -15,14 +15,18 @@ from torchsummary import summary
 
 
 def plot_unique_images(data_set,l,b,labels = None):
-    img_data = data_set.data
-    target = data_set.targets.copy()
+    
+    ran_index = [random.choice(range(0,len(data_set.targets)) for i in range (0,20)]
+    img_data = [data_set.data[i] for i in ran_index]
+    target = [data_set.targets[i] for i in ran_index]
+    
+
 
     fig = plt.figure(figsize=(2.5*b,5*l))
     count = 1
     unique_images_index = [random.choice(np.where(np.array(target) == search)[0]) for search in list(set(target))]
 
-    for image_index in unique_images_index:
+    for image_index in unique_images_index[20]:
         n= image_index
         ax = fig.add_subplot(len(unique_images_index)//5,5,count)
         _=plt.imshow(img_data[n])
