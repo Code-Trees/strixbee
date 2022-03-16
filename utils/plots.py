@@ -23,7 +23,7 @@ def plot_unique_images(data_set,l,b,labels = None):
     count = 1
     unique_images_index = [random.choice(np.where(np.array(target) == search)[0]) for search in list(set(target))]
 
-    for image_index in unique_images_index[20]:
+    for image_index in unique_images_index:
         n= image_index
         ax = fig.add_subplot(len(unique_images_index)//5,5,count)
         _=plt.imshow(img_data[n])
