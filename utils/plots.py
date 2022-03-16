@@ -25,7 +25,7 @@ def plot_unique_images(data_set,l,b,labels = None):
 
     for image_index in unique_images_index:
         n= image_index
-        ax = fig.add_subplot(1,10,count)
+        ax = fig.add_subplot(1,11,count)
         _=plt.imshow(img_data[n])
         try:
             _=plt.title(f"label :{labels[target[n]]} idx:{n}")
