@@ -16,7 +16,7 @@ from torchsummary import summary
 
 def plot_unique_images(data_set,l,b,labels = None):
     
-    ran_index = [random.choice(range(0,len(data_set.targets)) for i in range (0,20)]
+    ran_index = [random.choice(range(0,len(data_set.targets))) for i in range (0,20)]
     img_data = [data_set.data[i] for i in ran_index]
     target = [data_set.targets[i] for i in ran_index]
     
