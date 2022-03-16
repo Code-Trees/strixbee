@@ -15,12 +15,9 @@ from torchsummary import summary
 
 
 def plot_unique_images(data_set,l,b,labels = None):
-    
-    ran_index = [random.choice(range(0,len(data_set.targets))) for i in range (0,20)]
-    img_data = [data_set.data[i] for i in ran_index]
-    target = [data_set.targets[i] for i in ran_index]
-    
-
+       
+    img_data = data_set.data
+    target = data_set.targets.copy()
 
     fig = plt.figure(figsize=(2.5*b,5*l))
     count = 1
@@ -37,7 +34,7 @@ def plot_unique_images(data_set,l,b,labels = None):
         _ = plt.autoscale()
         _= fig.tight_layout(pad =1)
         count+= 1
-        if count>=len(set(target)):
+        if count>=20:
             break
     plt.show()
     return None
