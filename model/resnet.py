@@ -106,7 +106,7 @@ def ResNet18():
     return ResNet(BasicBlock, [2, 2, 2, 2])
 
 def TinyNet_model():
-    return ResNet(BasicBlock, [2, 2, 2, 2])    
+    return ResNet(BasicBlock, [2, 2, 2, 2],num_classes = 200)    
 
 def ResNet34():
     return ResNet(BasicBlock, [3, 4, 6, 3])
