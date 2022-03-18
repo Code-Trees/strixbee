@@ -44,7 +44,7 @@ def get_optimizer(model_obj,loss_type=None,scheduler = False,scheduler_type = 's
 def run_lrfinder(model_obj,device,train_loader,test_loader,start_lr,end_lr,loss_type=None):
     lrs  =[]
     # device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    num_iter = 15*len(train_loader)
+    num_iter = 40*len(train_loader)
 
     for i in range(0,len(start_lr)):
         opti = SGD( params = model_obj.parameters(),lr = start_lr[i],momentum = 0.9,nesterov=True, weight_decay=0) 
