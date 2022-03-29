@@ -75,12 +75,12 @@ def convert_image_np(inp,mean,std):
     inp = np.clip(inp, 0, 1)
     return inp
     
-def print_wrong_image(model,data_loader,mean,std,l,b):
+def print_wrong_image(model,label,data_loader,mean,std,l,b):
 
     if l*b >= 30:
         n_images = 50
     
-    labels = {0: 'airplane', 1: 'automobile', 2: 'bird', 3: 'cat', 4: 'deer', 5: 'dog', 6: 'frog', 7: 'horse', 8: 'ship', 9: 'truck'}
+    labels = labels
     wrong_images = []
     wrong_labels = []
     right_labels = []
